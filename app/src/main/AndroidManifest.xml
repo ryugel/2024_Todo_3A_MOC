@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Allows storing screenshots on external storage, where it can be accessed by ADB -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
+
+    <!-- Allows changing locales -->
+    <uses-permission
+        android:name="android.permission.CHANGE_CONFIGURATION"
+        tools:ignore="ProtectedPermissions" />
+
+    <!-- Allows changing SystemUI demo mode -->
+    <uses-permission
+        android:name="android.permission.DUMP"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,7 +29,7 @@
             android:name=".TodoDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivityToto"
+            android:name=".MainActivityTodo"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

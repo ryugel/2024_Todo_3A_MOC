@@ -9,7 +9,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-class MainActivityToto: AppCompatActivity(), TodoOnClickLListener {
+class MainActivityTodo: AppCompatActivity(), TodoOnClickLListener {
 
     private lateinit var todoListRecyclerView: RecyclerView
 
@@ -79,13 +79,12 @@ fun verifyPassword(motDePasse: String): List<String> {
     }
 
     // Vérifier au moins un caractère spécial
-    val caracteresSpeciaux = "~`!@#\\$%\\^&*\\(\\)-_+=<>?/\\[]\\{}|"
-
+    val caracteresSpeciaux = "~`!@#\$%\\^&*\\(\\)-_+=<>?/\\[]\\{}|"
 
     val pattern: Pattern = Pattern.compile(caracteresSpeciaux)
     val matcher: Matcher = pattern.matcher(motDePasse)
     val passwordMatchesqPattern = matcher.matches()
-    if (!passwordMatchesqPattern) {
+    if (passwordMatchesqPattern) {
         erreurs.add("Le mot de passe doit contenir au moins un caractère spécial parmi $caracteresSpeciaux.")
     }
 
