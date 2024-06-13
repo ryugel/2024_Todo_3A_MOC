@@ -26,10 +26,10 @@
         android:theme="@style/Theme.MyFirstApp"
         tools:targetApi="31">
         <activity
-            android:name=".TodoDetailActivity"
+            android:name=".views.TodoDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivityTodo"
+            android:name=".views.MainActivityTodo"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

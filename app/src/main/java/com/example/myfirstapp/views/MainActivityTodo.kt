@@ -1,38 +1,52 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.views
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myfirstapp.R
+import com.example.myfirstapp.model.TodoModel
+import com.example.myfirstapp.network.TodoServices
+import com.example.myfirstapp.network.TodosRepository
+import com.example.myfirstapp.viewmodels.TodoViewModel
+import com.google.gson.GsonBuilder
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
 class MainActivityTodo: AppCompatActivity(), TodoOnClickLListener {
 
+    // Views
     private lateinit var todoListRecyclerView: RecyclerView
+
+    // Data
+    lateinit var retrofitClient: Retrofit
+    lateinit var todoService: TodoServices
+
+    lateinit var todoViewModel: TodoViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        setUpActivityViews()
+
+        this.createRetrofitClient()
+        this.createTodoService()
+        this.initViewModel()
+
+        this.observeTodoListData()
+        this.fetchTodoList()
     }
 
-    private fun setUpActivityViews() {
+    private fun setUpActivityViews(data: List<TodoModel>) {
         this.todoListRecyclerView = findViewById(R.id.todo_list_recycler_view)
 
         // Setup RV Adapter
-        val todoAdapter = TodoListAdapter(arrayListOf(
-            TodoModel("La note de Rishi", "17/05/2024", false),
-            TodoModel("La note de Gilles", "17/05/2024", true),
-            TodoModel("La note de Yanis", "17/05/2024", false),
-            TodoModel("La note de Gilberto", "17/05/2024", true),
-            TodoModel("La note de Cedric", "17/05/2024", false),
-            TodoModel("La note de Alexis", "17/05/2024", true),
-            TodoModel("La note de Augustin", "17/05/2024", false),
-        ), this)
+        val todoAdapter = TodoListAdapter(data, this)
 
         // Setup Linear layout manager
         val linearLayoutManager = LinearLayoutManager(this)
@@ -42,6 +56,53 @@ class MainActivityTodo: AppCompatActivity(), TodoOnClickLListener {
         this.todoListRecyclerView.setAdapter(todoAdapter)
     }
 
+    // Setup HTTP client + services
+    private fun createRetrofitClient() {
+        val gsonConverter =
+            GsonConverterFactory.create(
+                GsonBuilder().create()
+            )
+        this.retrofitClient = Retrofit.Builder()
+            .baseUrl("https://my-json-server.typicode.com")
+            .addConverterFactory(gsonConverter)
+            .build()
+    }
+
+    private fun createTodoService() {
+        this.todoService = this.retrofitClient.create(TodoServices::class.java)
+    }
+
+    private fun initViewModel() {
+        this.todoViewModel = TodoViewModel(
+            TodosRepository(this.todoService),
+            this
+        )
+    }
+
+
+    // Data fetch and observing
+    private fun fetchTodoList() {
+        // viewModel.getTodo()
+        this.todoViewModel.fetchTodoFromRepo()
+    }
+
+
+    private fun observeTodoListData() {
+        this.todoViewModel.todos.observe(this) { todoList ->
+            val todoListModel = todoList.map {
+                TodoModel(
+                    it.title,
+                    it.due_date,
+                    it.completed
+                )
+            }
+
+            this.setUpActivityViews(todoListModel)
+        }
+    }
+
+
+
     override fun displayTodoDetail(todo: TodoModel) {
         Intent(this, TodoDetailActivity::class.java).also {
             startActivity(it)
@@ -50,6 +111,14 @@ class MainActivityTodo: AppCompatActivity(), TodoOnClickLListener {
 
     // A function that starts new activity with the selected todomodel
 }
+
+
+
+
+
+
+
+
 
 interface TodoOnClickLListener {
     fun displayTodoDetail(todo: TodoModel)

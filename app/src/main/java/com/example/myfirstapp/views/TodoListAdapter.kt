@@ -1,4 +1,4 @@
-package com.example.myfirstapp
+package com.example.myfirstapp.views
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.myfirstapp.R
+import com.example.myfirstapp.model.TodoModel
 
-class TodoListAdapter(val todoList: ArrayList<TodoModel>, private val todoClickHandler: TodoOnClickLListener): RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>(){
+class TodoListAdapter(val todoList: List<TodoModel>, private val todoClickHandler: TodoOnClickLListener): RecyclerView.Adapter<TodoListAdapter.TodoViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val todoView = LayoutInflater.from(parent.context)

@@ -47,4 +47,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.screengrab)
 
+    implementation(libs.retrofit)
+    implementation(libs.okhttp)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
+
 }
