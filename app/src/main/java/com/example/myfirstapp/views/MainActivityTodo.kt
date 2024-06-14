@@ -29,6 +29,9 @@ class MainActivityTodo: AppCompatActivity(), TodoOnClickLListener {
     lateinit var todoViewModel: TodoViewModel
 
 
+    companion object {
+        val TODO_MODEL_EXTRA = "TODO_MODEL_EXTRA"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -89,15 +92,7 @@ class MainActivityTodo: AppCompatActivity(), TodoOnClickLListener {
 
     private fun observeTodoListData() {
         this.todoViewModel.todos.observe(this) { todoList ->
-            val todoListModel = todoList.map {
-                TodoModel(
-                    it.title,
-                    it.due_date,
-                    it.completed
-                )
-            }
-
-            this.setUpActivityViews(todoListModel)
+            this.setUpActivityViews(todoList)
         }
     }
 
@@ -105,6 +100,10 @@ class MainActivityTodo: AppCompatActivity(), TodoOnClickLListener {
 
     override fun displayTodoDetail(todo: TodoModel) {
         Intent(this, TodoDetailActivity::class.java).also {
+            it.putExtra("TODO_TITLE_TEXT", todo.title)
+            it.putExtra("TODO_DESC_TEXT", todo.description)
+            it.putExtra("TODO_DATE_TEXT", todo.date)
+
             startActivity(it)
         }
     }

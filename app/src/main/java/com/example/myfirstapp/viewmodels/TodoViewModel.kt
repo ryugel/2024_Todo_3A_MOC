@@ -5,13 +5,14 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.myfirstapp.model.TodoDto
+import com.example.myfirstapp.model.TodoModel
 import com.example.myfirstapp.network.TodosRepository
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class TodoViewModel(private val todoRepository: TodosRepository, val context: Context) {
-    var todos: MutableLiveData<ArrayList<TodoDto>> = MutableLiveData()
+    var todos: MutableLiveData<ArrayList<TodoModel>> = MutableLiveData()
 
     fun fetchTodoFromRepo() {
         val todosApiResponse = this.todoRepository.fetchTodos()
@@ -22,8 +23,16 @@ class TodoViewModel(private val todoRepository: TodosRepository, val context: Co
             }
 
             override fun onResponse(p0: Call<List<TodoDto>>, response: Response<List<TodoDto>>) {
-                val responseBody: List<TodoDto>? = response.body()
-                todos.value = ArrayList(responseBody ?: listOf())
+                val responseBody: List<TodoDto> = response.body() ?: listOf()
+                val mappedResponse = responseBody.map {
+                    TodoModel(
+                        it.title,
+                        it.description,
+                        it.due_date,
+                        it.completed
+                    )
+                }
+                todos.value = ArrayList(mappedResponse)
             }
         })
     }
