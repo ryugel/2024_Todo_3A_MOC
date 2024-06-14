@@ -7,16 +7,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myfirstapp.R
+import com.example.myfirstapp.model.TodoModel
+import com.example.myfirstapp.views.MainActivityTodo.Companion.TODO_MODEL_EXTRA
 
 class TodoDetailActivity : AppCompatActivity() {
 
-    lateinit var todoTitleTextView: TextView
-    lateinit var todoDateTextView: TextView
-    lateinit var todoDescriptionTextView: TextView
+    private lateinit var todoTitleTextView: TextView
+    private lateinit var todoDateTextView: TextView
+    private lateinit var todoDescriptionTextView: TextView
 
-    lateinit var deleteImageView: ImageView
-    lateinit var updateImageView: ImageView
-    lateinit var validateTodoButton: Button
+    private lateinit var deleteImageView: ImageView
+    private lateinit var updateImageView: ImageView
+    private lateinit var validateTodoButton: Button
 
     // Data from intent
     private lateinit var todoDetailTitle: String
@@ -35,13 +37,12 @@ class TodoDetailActivity : AppCompatActivity() {
 
 
     private fun getIntentExtraData() {
-        if (this.intent.hasExtra("TODO_TITLE_TEXT") &&
-            this.intent.hasExtra("TODO_DESC_TEXT") &&
-            this.intent.hasExtra("TODO_DATE_TEXT")) {
+        if (this.intent.hasExtra(TODO_MODEL_EXTRA)) {
+            val todoData = intent.getParcelableExtra<TodoModel>(TODO_MODEL_EXTRA)!!
 
-            this.todoDetailTitle = intent.getStringExtra("TODO_TITLE_TEXT")!!
-            this.todoDetailDesc = intent.getStringExtra("TODO_DESC_TEXT")!!
-            this.todoDetailDate = intent.getStringExtra("TODO_DATE_TEXT")!!
+            this.todoDetailTitle = todoData.title ?: ""
+            this.todoDetailDesc = todoData.description ?: ""
+            this.todoDetailDate = todoData.date ?: ""
         }
     }
     private fun setupViews() {
