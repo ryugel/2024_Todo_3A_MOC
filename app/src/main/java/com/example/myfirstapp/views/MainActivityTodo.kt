@@ -112,14 +112,6 @@ class MainActivityTodo: AppCompatActivity(), TodoOnClickLListener {
     // A function that starts new activity with the selected todomodel
 }
 
-
-
-
-
-
-
-
-
 interface TodoOnClickLListener {
     fun displayTodoDetail(todo: TodoModel)
 }
